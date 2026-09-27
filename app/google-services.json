@@ -12,7 +12,20 @@
           "package_name": "com.pucmm.chatapp"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "534377648710-nue732siieei5g11s6t4sm1mlursjpak.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pucmm.chatapp",
+            "certificate_hash": "908b24284e3b3d76958653508a09dfe73bd2fe11"
+          }
+        },
+        {
+          "client_id": "534377648710-rfk8add3kegkt9f6bpif7071lb1iu4g7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBWMHpwHDJAPEvqXrbnSCJy0raMsir1vk4"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "534377648710-rfk8add3kegkt9f6bpif7071lb1iu4g7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
