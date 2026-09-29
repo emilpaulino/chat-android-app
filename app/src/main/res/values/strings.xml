@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">chat-android-app</string>
+    <string name="lblIniciarSesion">Iniciar Sesión</string>
+    <string name="lblDesc">Inicie sesión para poder continuar</string>
+    <string name="txtUserName">Nombre de usuario</string>
+    <string name="txtPassword">Contraseña</string>
+    <string name="btnLogin">Iniciar Sesión</string>
+    <string name="btnGoogle">Continuar con Google</string>
+    <string name="lblOr">- o -</string>
 </resources>
