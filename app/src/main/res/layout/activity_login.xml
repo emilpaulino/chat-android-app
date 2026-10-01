@@ -9,7 +9,7 @@
     tools:context=".ui.auth.LoginActivity">
 
   <TextView
-      android:id="@+id/lblIniciarSesion"
+      android:id="@+id/lblNuevaCuenta"
       android:layout_width="0dp"
       android:layout_height="52dp"
       android:layout_marginStart="30dp"
@@ -23,7 +23,7 @@
       app:layout_constraintTop_toBottomOf="@+id/imgHeader" />
 
   <TextView
-      android:id="@+id/lblDesc"
+      android:id="@+id/lblDescReg"
       android:layout_width="0dp"
       android:layout_height="22dp"
       android:layout_marginStart="30dp"
@@ -32,7 +32,7 @@
       android:text="@string/lblDesc"
       android:textColor="@color/primary"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/lblIniciarSesion" />
+      app:layout_constraintTop_toBottomOf="@+id/lblNuevaCuenta" />
 
   <EditText
       android:id="@+id/txtUserName"
@@ -52,7 +52,7 @@
       android:textSize="14sp"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/lblDesc" />
+      app:layout_constraintTop_toBottomOf="@+id/lblDescReg" />
 
     <EditText
         android:id="@+id/txtPassword"
@@ -76,7 +76,7 @@
         app:layout_constraintTop_toBottomOf="@+id/txtUserName" />
 
   <Button
-      android:id="@+id/btnLogin"
+      android:id="@+id/btnRegistrarse"
       android:layout_width="0dp"
       android:layout_height="55dp"
       android:layout_marginStart="30dp"
@@ -103,7 +103,7 @@
       android:textSize="14sp"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/btnLogin" />
+      app:layout_constraintTop_toBottomOf="@+id/btnRegistrarse" />
 
   <com.google.android.material.button.MaterialButton
       android:id="@+id/btnGoogle"

@@ -1,4 +1,4 @@
-package com.pucmm.chatapp;
+package com.pucmm.chatapp.ui.auth;
 
 import android.os.Bundle;
 
@@ -8,7 +8,9 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class MainActivity extends AppCompatActivity {
+import com.pucmm.chatapp.R;
+
+public class RegisterActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

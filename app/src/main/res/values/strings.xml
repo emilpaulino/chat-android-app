@@ -7,4 +7,8 @@
     <string name="btnLogin">Iniciar Sesión</string>
     <string name="btnGoogle">Continuar con Google</string>
     <string name="lblOr">- o -</string>
+    <string name="lblNuevaCuenta">Nueva Cuenta</string>
+    <string name="lblDescReg">Regístrate para poder continuar</string>
+    <string name="txtEmail">Correo electrónico</string>
+    <string name="btnRegister">Registrarse</string>
 </resources>
