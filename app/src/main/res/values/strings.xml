@@ -11,4 +11,5 @@
     <string name="lblDescReg">Regístrate para poder continuar</string>
     <string name="txtEmail">Correo electrónico</string>
     <string name="btnRegister">Registrarse</string>
+    <string name="txtRegLog">¿No tienes cuenta? Regístrate</string>
 </resources>

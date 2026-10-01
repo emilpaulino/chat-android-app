@@ -13,7 +13,7 @@
       android:layout_width="0dp"
       android:layout_height="52dp"
       android:layout_marginStart="30dp"
-      android:layout_marginTop="40dp"
+      android:layout_marginTop="10dp"
       android:fontFamily="@font/poppins_semibold"
       android:text="@string/lblIniciarSesion"
       android:textColor="@color/primary"
@@ -80,7 +80,7 @@
       android:layout_width="0dp"
       android:layout_height="55dp"
       android:layout_marginStart="30dp"
-      android:layout_marginTop="15dp"
+      android:layout_marginTop="20dp"
       android:layout_marginEnd="30dp"
       android:backgroundTint="@color/secondary"
       android:fontFamily="@font/poppins"
@@ -95,7 +95,7 @@
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_marginStart="70dp"
-      android:layout_marginTop="20dp"
+      android:layout_marginTop="15dp"
       android:layout_marginEnd="70dp"
       android:text="@string/lblOr"
       android:textAlignment="center"
@@ -110,7 +110,7 @@
       android:layout_width="0dp"
       android:layout_height="55dp"
       android:layout_marginStart="30dp"
-      android:layout_marginTop="20dp"
+      android:layout_marginTop="15dp"
       android:layout_marginEnd="30dp"
       android:text="@string/btnGoogle"
       android:textColor="@color/text_primary"
@@ -137,5 +137,19 @@
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"
       app:srcCompat="@drawable/header_auth" />
+
+  <TextView
+      android:id="@+id/txtRegister"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:gravity="center"
+      android:layout_marginTop="30dp"
+      android:text="@string/txtRegLog"
+      android:textColor="#3D5882"
+      android:textSize="14sp"
+      android:fontFamily="@font/poppins_semibold"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/btnGoogle" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
