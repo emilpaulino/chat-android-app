@@ -37,7 +37,7 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
         binding.imgBack.setOnClickListener(v -> finish());
-        binding.btnRegistrarse.setOnClickListener(v -> registrarUsuario());
+        binding.btnRegister.setOnClickListener(v -> registrarUsuario());
     }
 
     private void registrarUsuario() {

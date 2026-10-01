@@ -5,33 +5,43 @@ import com.google.firebase.auth.FirebaseAuth;
 public class AuthRepository {
     private final FirebaseAuth firebaseAuth;
 
-    public AuthRepository(){
+    public AuthRepository() {
         firebaseAuth = FirebaseAuth.getInstance();
     }
 
     // Interfaz para comunicar el resultado del registro al ViewModel.
     public interface AuthCallback {
         void onSuccess();
+
         void onError(String error);
     }
 
-    public void register(String email, String password, AuthCallback callback){
+    public void register(String email, String password, AuthCallback callback) {
         firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        callback.onSuccess();
-                    } else {
-                        String error;
+            if (task.isSuccessful()) {
+                callback.onSuccess();
+            } else {
+                callback.onError(obtenerError(task.getException()));
+            }
+        });
+    }
 
-                        if (task.getException() != null) {
-                            error = task.getException().getMessage();
-                        } else {
-                            error = "Error desconocido";
-                        }
+    public void login(String email, String password, AuthCallback callback) {
+        firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                callback.onSuccess();
+            } else {
+                callback.onError(obtenerError(task.getException()));
+            }
+        });
+    }
 
-                        callback.onError(error);
-                    }
-
-                });
+    private String obtenerError(Exception exception) {
+        if (exception != null) {
+            return exception.getMessage();
+        } else {
+            return "Error desconocido";
+        }
     }
 
 }
