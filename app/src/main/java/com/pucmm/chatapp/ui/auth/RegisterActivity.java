@@ -42,14 +42,15 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void registrarUsuario() {
 
+        String name = binding.txtName.getText().toString().trim();
         String email = binding.txtEmail.getText().toString().trim();
         String password = binding.txtPassword.getText().toString().trim();
 
-        if (!validarCampos(email, password)) {
+        if (!validarCampos(name, email, password)) {
             return;
         }
 
-        authViewModel.register(email, password, new AuthRepository.AuthCallback() {
+        authViewModel.register(name, email, password, new AuthRepository.AuthCallback() {
             @Override
             public void onSuccess() {
                 Toast.makeText(RegisterActivity.this, "Cuenta creada correctamente", Toast.LENGTH_SHORT).show();
@@ -63,7 +64,13 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    private boolean validarCampos(String email, String password) {
+    private boolean validarCampos(String name, String email, String password) {
+
+        if(name.isEmpty()){
+            binding.txtName.setError("Ingrese su nombre");
+            binding.txtName.requestFocus();
+            return false;
+        }
 
         if (email.isEmpty()) {
             binding.txtEmail.setError("Ingrese su correo");

@@ -12,4 +12,6 @@
     <string name="txtEmail">Correo electrónico</string>
     <string name="btnRegister">Registrarse</string>
     <string name="txtRegLog">¿No tienes cuenta? Regístrate</string>
+    <string name="txtName">Nombre completo</string>
+    <string name="txtToolbarTitle">Chats</string>
 </resources>

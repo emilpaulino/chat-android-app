@@ -11,6 +11,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.pucmm.chatapp.MainActivity;
 import com.pucmm.chatapp.R;
 import com.pucmm.chatapp.data.repository.AuthRepository;
 import com.pucmm.chatapp.databinding.ActivityLoginBinding;
@@ -58,6 +59,9 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onSuccess() {
                 Toast.makeText(LoginActivity.this, "Se ha iniciado sesión correctamente", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
             }
 
             @Override
