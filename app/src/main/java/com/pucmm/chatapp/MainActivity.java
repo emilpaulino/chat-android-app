@@ -1,16 +1,14 @@
 package com.pucmm.chatapp;
 
 import android.os.Bundle;
-import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.pucmm.chatapp.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
@@ -22,24 +20,21 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
-
-        EdgeToEdge.enable(this);
         setContentView(binding.getRoot());
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.recyclerChats), (v, insets) -> {
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+
+        getWindow().setStatusBarColor(android.graphics.Color.TRANSPARENT);
+
+        WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView()).setAppearanceLightStatusBars(false);
+
+        binding.recyclerChats.setLayoutManager(new LinearLayoutManager(this));
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.getRoot(), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            v.setPadding(0, 0, 0, systemBars.bottom);
+            binding.topBar.setPadding(0, systemBars.top, 0, 0);
             return insets;
         });
-
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-        if (user != null) {
-            Toast.makeText(
-                    this,
-                    "Nombre: " + user.getDisplayName(),
-                    Toast.LENGTH_LONG
-            ).show();
-        }
     }
 }
