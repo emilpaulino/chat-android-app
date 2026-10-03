@@ -35,7 +35,7 @@
 
 
     <TextView
-        android:id="@+id/txtMessageDesc"
+        android:id="@+id/txtContactEmail"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -44,7 +44,7 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:singleLine="true"
-        android:text="@string/txtLastMessage"
+        android:text="@string/lblContactEmail"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imgProfile"
         app:layout_constraintTop_toBottomOf="@+id/txtUserName" />

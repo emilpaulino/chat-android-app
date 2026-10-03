@@ -14,4 +14,9 @@
     <string name="txtRegLog">¿No tienes cuenta? Regístrate</string>
     <string name="txtName">Nombre completo</string>
     <string name="txtToolbarTitle">Chats</string>
+    <string name="txtToolbarContactsTitle">Contactos</string>
+    <string name="txtUsuariosNoReg">No se encontraron usuarios registrados</string>
+    <string name="lblContactName">Nombre</string>
+    <string name="txtLastMessage">Ultimo mensaje...</string>
+    <string name="lblContactEmail">email@email.com</string>
 </resources>

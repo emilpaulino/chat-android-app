@@ -1,5 +1,6 @@
 package com.pucmm.chatapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,6 +11,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.pucmm.chatapp.databinding.ActivityMainBinding;
+import com.pucmm.chatapp.ui.users.UsersActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -23,9 +25,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
-
         getWindow().setStatusBarColor(android.graphics.Color.TRANSPARENT);
-
         WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView()).setAppearanceLightStatusBars(false);
 
         binding.recyclerChats.setLayoutManager(new LinearLayoutManager(this));
@@ -35,6 +35,11 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(0, 0, 0, systemBars.bottom);
             binding.topBar.setPadding(0, systemBars.top, 0, 0);
             return insets;
+        });
+
+        binding.imgContacts.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, UsersActivity.class);
+            startActivity(intent);
         });
     }
 }

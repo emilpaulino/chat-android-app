@@ -1,13 +1,20 @@
 package com.pucmm.chatapp.data.repository;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class AuthRepository {
     private final FirebaseAuth firebaseAuth;
+    private final FirebaseFirestore db;
 
     public AuthRepository() {
         firebaseAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance("chat-app");
     }
 
     // Interfaz para comunicar el resultado del registro al ViewModel.
@@ -25,7 +32,7 @@ public class AuthRepository {
                 firebaseAuth.getCurrentUser().updateProfile(profileUpdates).addOnCompleteListener(profileTask -> {
 
                     if (profileTask.isSuccessful()) {
-                        callback.onSuccess();
+                        saveUserOnFirestore(firebaseAuth.getCurrentUser(), name, email, callback);
                     } else {
                         callback.onError("No se pudo guardar el nombre");
                     }
@@ -53,6 +60,20 @@ public class AuthRepository {
         } else {
             return "Error desconocido";
         }
+    }
+
+    private void saveUserOnFirestore(FirebaseUser user, String name, String email, AuthCallback callback) {
+
+        Map<String, Object> userData = new HashMap<>();
+        userData.put("userName", name);
+        userData.put("email", email);
+        userData.put("profileImage", "");
+
+        db.collection("users")
+                .document(user.getUid())
+                .set(userData)
+                .addOnSuccessListener(aVoid -> callback.onSuccess())
+                .addOnFailureListener(e -> callback.onError(e.getMessage()));
     }
 
 }
