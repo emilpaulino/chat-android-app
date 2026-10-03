@@ -12,7 +12,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.pucmm.chatapp.R;
 import com.pucmm.chatapp.data.repository.AuthRepository;
-import com.pucmm.chatapp.databinding.ActivityLoginBinding;
 import com.pucmm.chatapp.databinding.ActivityRegisterBinding;
 import com.pucmm.chatapp.viewmodel.AuthViewModel;
 
@@ -30,7 +29,7 @@ public class RegisterActivity extends AppCompatActivity {
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
 
         EdgeToEdge.enable(this);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.recyclerChats), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
