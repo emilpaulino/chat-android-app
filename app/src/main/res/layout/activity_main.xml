@@ -5,6 +5,7 @@
     android:id="@+id/layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/surface"
     android:layout_gravity="center"
     tools:context=".MainActivity">
 
@@ -19,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar"
+            android:id="@+id/toolbarConversation"
             android:layout_width="match_parent"
             android:layout_height="64dp"
             android:background="@color/primary"

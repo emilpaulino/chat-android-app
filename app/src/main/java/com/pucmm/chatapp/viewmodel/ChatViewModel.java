@@ -1,0 +1,60 @@
+package com.pucmm.chatapp.viewmodel;
+
+import androidx.lifecycle.ViewModel;
+
+import com.google.firebase.firestore.ListenerRegistration;
+import com.pucmm.chatapp.data.model.Message;
+import com.pucmm.chatapp.data.repository.ChatRepository;
+
+import java.util.List;
+
+public class ChatViewModel extends ViewModel {
+
+    private final ChatRepository chatRepository;
+
+    public ChatViewModel() {
+        chatRepository = new ChatRepository();
+    }
+
+    public interface MessageCallback {
+        void onSuccess();
+        void onError(String error);
+    }
+
+    public interface MessagesCallback {
+        void onSuccess(List<Message> messages);
+        void onError(String error);
+    }
+
+    public String generateChatId(String userId1, String userId2) {
+        return chatRepository.generateChatId(userId1, userId2);
+    }
+
+    public void sendMessage(String chatId, String senderId, String text, MessageCallback callback) {
+        chatRepository.sendMessage(chatId, senderId, text, new ChatRepository.MessageCallback() {
+            @Override
+            public void onSuccess() {
+                callback.onSuccess();
+            }
+
+            @Override
+            public void onError(String error) {
+                callback.onError(error);
+            }
+        });
+    }
+
+    public ListenerRegistration listenMessages(String chatId, MessagesCallback callback) {
+        return chatRepository.listenMessages(chatId, new ChatRepository.MessagesCallback() {
+            @Override
+            public void onSuccess(List<Message> messages) {
+                callback.onSuccess(messages);
+            }
+
+            @Override
+            public void onError(String error) {
+                callback.onError(error);
+            }
+        });
+    }
+}

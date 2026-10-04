@@ -1,5 +1,6 @@
 package com.pucmm.chatapp.data.model;
 
+import com.pucmm.chatapp.data.model.Message;
 public class Chat {
     private String chatID;
     private User user;
