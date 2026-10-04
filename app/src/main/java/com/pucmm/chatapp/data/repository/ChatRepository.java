@@ -129,92 +129,89 @@ public class ChatRepository {
         });
     }
 
-    public ListenerRegistration listenChats(
-            String currentUserId,
-            ChatsCallback callback
-    ) {
+    public ListenerRegistration listenChats(String currentUserId, ChatsCallback callback) {
 
-        return db.collection("chats")
-                .whereArrayContains("participants", currentUserId)
-                .addSnapshotListener((querySnapshot, error) -> {
+        return db.collection("chats").whereArrayContains("participants", currentUserId).addSnapshotListener((querySnapshot, error) -> {
 
-                    if (error != null) {
-                        callback.onError(error.getMessage());
-                        return;
+            if (error != null) {
+                callback.onError(error.getMessage());
+                return;
+            }
+
+            if (querySnapshot == null) {
+                callback.onSuccess(new ArrayList<>());
+                return;
+            }
+
+            List<Chat> chats = new ArrayList<>();
+
+            for (DocumentSnapshot document : querySnapshot.getDocuments()) {
+
+                String chatId = document.getId();
+                List<String> participants = (List<String>) document.get("participants");
+                String otherUserId = null;
+
+                if (participants != null) {
+                    for (String participantId : participants) {
+                        if (!participantId.equals(currentUserId)) {
+                            otherUserId = participantId;
+                            break;
+                        }
+                    }
+                }
+
+                if (otherUserId == null) {
+                    continue;
+                }
+
+                String lastMessageText = document.getString("lastMessage");
+                String lastMessageSenderId = document.getString("lastMessageSenderId");
+                Timestamp timestamp = document.getTimestamp("lastMessageTimestamp");
+                Date lastMessageDate = null;
+
+                if (timestamp != null) {
+                    lastMessageDate = timestamp.toDate();
+                }
+
+                Message lastMessage = new Message("", lastMessageSenderId, lastMessageText, lastMessageDate);
+                String finalOtherUserId = otherUserId;
+
+                UserRepository userRepository = new UserRepository();
+                userRepository.getUser(finalOtherUserId, new UserRepository.UserCallback() {
+                    @Override
+                    public void onSuccess(User user) {
+                        Chat chat = new Chat(chatId, user, lastMessage);
+                        chats.add(chat);
+                        if (chats.size() == querySnapshot.size()) {
+                            chats.sort((chat1, chat2) -> {
+                                Date date1 = chat1.getLastMessage().getTimestamp();
+                                Date date2 = chat2.getLastMessage().getTimestamp();
+                                if (date1 == null && date2 == null) {
+                                    return 0;
+                                }
+                                if (date1 == null) {
+                                    return 1;
+                                }
+                                if (date2 == null) {
+                                    return -1;
+                                }
+                                return date2.compareTo(date1);
+                            });
+                            callback.onSuccess(chats);
+                        }
                     }
 
-                    if (querySnapshot == null) {
-                        callback.onSuccess(new ArrayList<>());
-                        return;
-                    }
-
-                    List<Chat> chats = new ArrayList<>();
-
-                    for (DocumentSnapshot document : querySnapshot.getDocuments()) {
-
-                        String chatId = document.getId();
-
-                        List<String> participants =
-                                (List<String>) document.get("participants");
-
-                        String otherUserId = null;
-
-                        if (participants != null) {
-
-                            for (String participantId : participants) {
-
-                                if (!participantId.equals(currentUserId)) {
-                                    otherUserId = participantId;
-                                    break;
-                                }
-                            }
-                        }
-
-                        if (otherUserId == null) {
-                            continue;
-                        }
-
-                        String lastMessageText = document.getString("lastMessage");
-                        String lastMessageSenderId = document.getString("lastMessageSenderId");
-                        Timestamp timestamp = document.getTimestamp("lastMessageTimestamp");
-
-                        Date lastMessageDate = null;
-
-                        if (timestamp != null) {
-                            lastMessageDate = timestamp.toDate();
-                        }
-
-                        Message lastMessage = new Message("", lastMessageSenderId, lastMessageText, lastMessageDate);
-
-                        String finalOtherUserId = otherUserId;
-
-                        UserRepository userRepository = new UserRepository();
-
-                        userRepository.getUser(finalOtherUserId, new UserRepository.UserCallback() {
-                            @Override
-                            public void onSuccess(User user) {
-
-                                Chat chat = new Chat(chatId, user, lastMessage);
-
-                                chats.add(chat);
-
-                                if (chats.size() == querySnapshot.size()) {
-                                    callback.onSuccess(chats);
-                                }
-                                    }
-
-                                    @Override
-                                    public void onError(String error) {
-                                        callback.onError(error);
-                                    }
-                                }
-                        );
-                    }
-
-                    if (querySnapshot.isEmpty()) {
-                        callback.onSuccess(chats);
+                    @Override
+                    public void onError(String error) {
+                        callback.onError(error);
                     }
                 });
+            }
+
+            if (querySnapshot.isEmpty()) {
+                callback.onSuccess(chats);
+            }
+        });
     }
 
 }
