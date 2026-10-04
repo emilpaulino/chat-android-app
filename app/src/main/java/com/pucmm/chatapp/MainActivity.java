@@ -26,6 +26,7 @@ import com.pucmm.chatapp.databinding.ActivityMainBinding;
 import com.pucmm.chatapp.ui.auth.LoginActivity;
 import com.pucmm.chatapp.ui.chat.ChatAdapter;
 import com.pucmm.chatapp.ui.users.UsersActivity;
+import com.pucmm.chatapp.viewmodel.AuthViewModel;
 import com.pucmm.chatapp.viewmodel.ChatViewModel;
 
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
 
     private ChatViewModel chatViewModel;
+    private AuthViewModel authViewModel;
     private ChatAdapter chatAdapter;
     private List<Chat> chatList;
     private ListenerRegistration chatListener;
@@ -59,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
 
         binding.toolbarConversation.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.action_logout) {
-                FirebaseAuth.getInstance().signOut();
+                authViewModel.logout();
 
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                 startActivity(intent);
@@ -113,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         chatViewModel = new ViewModelProvider(this).get(ChatViewModel.class);
+        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
 
         chatList = new ArrayList<>();
 
@@ -126,19 +129,13 @@ public class MainActivity extends AppCompatActivity {
 
         binding.recyclerChats.setAdapter(chatAdapter);
 
-        String currentUserId =
-                FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        chatListener = chatViewModel.listenChats(
-                currentUserId,
-                new ChatViewModel.ChatsCallback() {
-
+        chatListener = chatViewModel.listenChats(currentUserId, new ChatViewModel.ChatsCallback() {
                     @Override
                     public void onSuccess(List<Chat> chats) {
-
                         chatList.clear();
                         chatList.addAll(chats);
-
                         chatAdapter.notifyDataSetChanged();
                     }
 

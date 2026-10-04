@@ -19,4 +19,8 @@ public class AuthViewModel extends ViewModel {
         authRepository.login(email, password, callback);
     }
 
+    public void logout(){
+        authRepository.logout();
+    }
+
 }

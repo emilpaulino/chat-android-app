@@ -76,4 +76,8 @@ public class AuthRepository {
                 .addOnFailureListener(e -> callback.onError(e.getMessage()));
     }
 
+    public void logout() {
+        firebaseAuth.signOut();
+    }
+
 }
