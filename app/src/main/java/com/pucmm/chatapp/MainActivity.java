@@ -1,9 +1,15 @@
 package com.pucmm.chatapp;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
@@ -12,7 +18,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.pucmm.chatapp.data.model.Chat;
 import com.pucmm.chatapp.databinding.ActivityMainBinding;
 import com.pucmm.chatapp.ui.chat.ChatAdapter;
@@ -20,7 +28,9 @@ import com.pucmm.chatapp.ui.users.UsersActivity;
 import com.pucmm.chatapp.viewmodel.ChatViewModel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -37,6 +47,36 @@ public class MainActivity extends AppCompatActivity {
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 100);
+            }
+        }
+
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
+
+            if (!task.isSuccessful()) {
+                Log.e("FCM", "Error al obtener el token", task.getException());
+                return;
+            }
+
+            String token = task.getResult();
+
+            Log.d("FCM", "Token: " + token);
+
+            String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+            Map<String, Object> data = new HashMap<>();
+            data.put("fcmToken", token);
+
+            FirebaseFirestore.getInstance("chat-app")
+                    .collection("users")
+                    .document(userId)
+                    .update(data)
+                    .addOnSuccessListener(aVoid -> Log.d("FCM", "Token guardado en Firestore"))
+                    .addOnFailureListener(error -> Log.e("FCM", "Error al guardar token", error));
+        });
 
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         getWindow().setStatusBarColor(android.graphics.Color.TRANSPARENT);
