@@ -8,12 +8,16 @@ public class Message {
     private String senderId;
     private String text;
     private Date timestamp;
+    private String type;
+    private String imageUrl;
 
-    public Message(String messageId, String senderId, String text, Date timestamp) {
+    public Message(String messageId, String senderId, String text, Date timestamp, String type, String imageUrl) {
         this.messageId = messageId;
         this.senderId = senderId;
         this.text = text;
         this.timestamp = timestamp;
+        this.type = type;
+        this.imageUrl = imageUrl;
     }
 
     public String getMessageId() {
@@ -31,4 +35,13 @@ public class Message {
     public Date getTimestamp() {
         return timestamp;
     }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public String getType() {
+        return type;
+    }
+
 }

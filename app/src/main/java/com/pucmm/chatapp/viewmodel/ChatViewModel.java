@@ -1,5 +1,7 @@
 package com.pucmm.chatapp.viewmodel;
 
+import android.net.Uri;
+
 import androidx.lifecycle.ViewModel;
 
 import com.google.firebase.firestore.ListenerRegistration;
@@ -35,6 +37,11 @@ public class ChatViewModel extends ViewModel {
         void onError(String error);
     }
 
+    public interface ImageCallback {
+        void onSuccess();
+        void onError(String error);
+    }
+
     public String generateChatId(String userId1, String userId2) {
         return chatRepository.generateChatId(userId1, userId2);
     }
@@ -42,6 +49,22 @@ public class ChatViewModel extends ViewModel {
     public void sendMessage(String chatId, String senderId, String receiverId, String text, MessageCallback callback) {
 
         chatRepository.sendMessage(chatId, senderId, receiverId, text, new ChatRepository.MessageCallback() {
+
+            @Override
+            public void onSuccess() {
+                callback.onSuccess();
+            }
+
+            @Override
+            public void onError(String error) {
+                callback.onError(error);
+            }
+        });
+    }
+
+    public void sendImage(String chatId, String senderId, String receiverId, Uri imageUri, ImageCallback callback) {
+
+        chatRepository.sendImage(chatId, senderId, receiverId, imageUri, new ChatRepository.ImageCallback() {
 
             @Override
             public void onSuccess() {

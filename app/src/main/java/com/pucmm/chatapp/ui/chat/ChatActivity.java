@@ -1,7 +1,14 @@
 package com.pucmm.chatapp.ui.chat;
 
+import android.content.ContentValues;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -28,6 +35,8 @@ public class ChatActivity extends AppCompatActivity {
     private String chatId;
     private MessageAdapter messageAdapter;
     private ListenerRegistration messageListener;
+    private ActivityResultLauncher<String> galleryLauncher;
+    private ActivityResultLauncher<Void> cameraLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +69,44 @@ public class ChatActivity extends AppCompatActivity {
 
         currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         chatViewModel = new ViewModelProvider(this).get(ChatViewModel.class);
+
+        galleryLauncher = registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
+                    if (uri != null) {
+                        chatViewModel.sendImage(chatId, currentUserId, userId, uri, new ChatViewModel.ImageCallback() {
+                                    @Override
+                                    public void onSuccess() {
+                                    }
+
+                                    @Override
+                                    public void onError(String error) {
+                                    }
+                                }
+                        );
+                    }
+                }
+        );
+
+        cameraLauncher = registerForActivityResult(new ActivityResultContracts.TakePicturePreview(), bitmap -> {
+
+            if (bitmap == null) {
+                return;
+            }
+
+            Uri imageUri = saveBitmapToGallery(bitmap);
+            if (imageUri == null) {
+                return;
+            }
+
+            chatViewModel.sendImage(chatId, currentUserId, userId, imageUri, new ChatViewModel.ImageCallback() {
+                @Override
+                public void onSuccess() {
+                }
+
+                @Override
+                public void onError(String error) {
+                }
+            });
+        });
 
         chatId = chatViewModel.generateChatId(currentUserId, userId);
         List<Message> messageList = new ArrayList<>();
@@ -96,7 +143,6 @@ public class ChatActivity extends AppCompatActivity {
             }
 
             chatViewModel.sendMessage(chatId, currentUserId, userId, text, new ChatViewModel.MessageCallback() {
-
                 @Override
                 public void onSuccess() {
                     binding.txtMessage.setText("");
@@ -106,6 +152,56 @@ public class ChatActivity extends AppCompatActivity {
                 public void onError(String error) {
                 }
             });
+        });
+
+        galleryLauncher = registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
+            if (uri != null) {
+                chatViewModel.sendImage(chatId, currentUserId, userId, uri, new ChatViewModel.ImageCallback() {
+                    @Override
+                    public void onSuccess() {
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        android.util.Log.e("CHAT_IMAGE", "Error al subir imagen: " + error);
+                    }
+                });
+            }
+        });
+
+        cameraLauncher = registerForActivityResult(new ActivityResultContracts.TakePicturePreview(), bitmap -> {
+            if (bitmap != null) {
+                Uri imageUri = saveBitmapToGallery(bitmap);
+
+                if (imageUri == null) {
+                    return;
+                }
+
+                chatViewModel.sendImage(chatId, currentUserId, userId, imageUri, new ChatViewModel.ImageCallback() {
+                    @Override
+                    public void onSuccess() {
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        android.util.Log.e("CHAT_IMAGE", "Error al subir imagen: " + error);
+                    }
+                });
+            }
+        });
+
+        binding.btnImage.setOnClickListener(v -> {
+
+            String[] options = {"Cámara", "Galería"};
+
+            new androidx.appcompat.app.AlertDialog.Builder(ChatActivity.this).setTitle("Seleccionar imagen").setItems(options, (dialog, which) -> {
+
+                if (which == 0) {
+                    cameraLauncher.launch(null);
+                } else {
+                    galleryLauncher.launch("image/*");
+                }
+            }).show();
         });
 
         binding.toolbarConversation.setNavigationOnClickListener(v -> {
@@ -120,6 +216,30 @@ public class ChatActivity extends AppCompatActivity {
 
         if (messageListener != null) {
             messageListener.remove();
+        }
+    }
+
+    private Uri saveBitmapToGallery(Bitmap bitmap) {
+
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.DISPLAY_NAME, "chat_image_" + System.currentTimeMillis() + ".jpg");
+        values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+
+        Uri imageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+        if (imageUri == null) {
+            return null;
+        }
+
+        try {
+            java.io.OutputStream outputStream = getContentResolver().openOutputStream(imageUri);
+            if (outputStream == null) {
+                return null;
+            }
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, outputStream);
+            outputStream.close();
+            return imageUri;
+        } catch (Exception e) {
+            return null;
         }
     }
 

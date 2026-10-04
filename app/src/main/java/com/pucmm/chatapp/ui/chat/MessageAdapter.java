@@ -3,11 +3,13 @@ package com.pucmm.chatapp.ui.chat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.pucmm.chatapp.R;
 import com.pucmm.chatapp.data.model.Message;
 
@@ -40,7 +42,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     @NonNull
     @Override
     public MessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
         int layout;
 
         if (viewType == 1) {
@@ -59,7 +60,19 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
         Message message = messageList.get(position);
 
-        holder.txtMessage.setText(message.getText());
+        if ("image".equals(message.getType())) {
+            holder.txtMessage.setVisibility(View.GONE);
+            holder.imgMessage.setVisibility(View.VISIBLE);
+
+            Glide.with(holder.itemView.getContext())
+                    .load(message.getImageUrl())
+                    .into(holder.imgMessage);
+
+        } else {
+            holder.imgMessage.setVisibility(View.GONE);
+            holder.txtMessage.setVisibility(View.VISIBLE);
+            holder.txtMessage.setText(message.getText());
+        }
 
         if (message.getTimestamp() != null) {
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
@@ -73,15 +86,16 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     }
 
     public static class MessageViewHolder extends RecyclerView.ViewHolder {
-
         TextView txtMessage;
         TextView txtTime;
+        ImageView imgMessage;
 
         public MessageViewHolder(@NonNull View itemView) {
             super(itemView);
 
             txtMessage = itemView.findViewById(R.id.txtMessage);
             txtTime = itemView.findViewById(R.id.txtTime);
+            imgMessage = itemView.findViewById(R.id.imgMessage);
         }
     }
 }
