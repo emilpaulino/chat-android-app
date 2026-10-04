@@ -3,6 +3,7 @@ package com.pucmm.chatapp.viewmodel;
 import androidx.lifecycle.ViewModel;
 
 import com.google.firebase.firestore.ListenerRegistration;
+import com.pucmm.chatapp.data.model.Chat;
 import com.pucmm.chatapp.data.model.Message;
 import com.pucmm.chatapp.data.repository.ChatRepository;
 
@@ -18,11 +19,19 @@ public class ChatViewModel extends ViewModel {
 
     public interface MessageCallback {
         void onSuccess();
+
         void onError(String error);
     }
 
     public interface MessagesCallback {
         void onSuccess(List<Message> messages);
+
+        void onError(String error);
+    }
+
+    public interface ChatsCallback {
+        void onSuccess(List<Chat> chats);
+
         void onError(String error);
     }
 
@@ -30,8 +39,10 @@ public class ChatViewModel extends ViewModel {
         return chatRepository.generateChatId(userId1, userId2);
     }
 
-    public void sendMessage(String chatId, String senderId, String text, MessageCallback callback) {
-        chatRepository.sendMessage(chatId, senderId, text, new ChatRepository.MessageCallback() {
+    public void sendMessage(String chatId, String senderId, String receiverId, String text, MessageCallback callback) {
+
+        chatRepository.sendMessage(chatId, senderId, receiverId, text, new ChatRepository.MessageCallback() {
+
             @Override
             public void onSuccess() {
                 callback.onSuccess();
@@ -49,6 +60,22 @@ public class ChatViewModel extends ViewModel {
             @Override
             public void onSuccess(List<Message> messages) {
                 callback.onSuccess(messages);
+            }
+
+            @Override
+            public void onError(String error) {
+                callback.onError(error);
+            }
+        });
+    }
+
+    public ListenerRegistration listenChats(String currentUserId, ChatsCallback callback) {
+
+        return chatRepository.listenChats(currentUserId, new ChatRepository.ChatsCallback() {
+
+            @Override
+            public void onSuccess(List<Chat> chats) {
+                callback.onSuccess(chats);
             }
 
             @Override

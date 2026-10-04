@@ -13,7 +13,7 @@
     <string name="btnRegister">Registrarse</string>
     <string name="txtRegLog">¿No tienes cuenta? Regístrate</string>
     <string name="txtName">Nombre completo</string>
-    <string name="txtToolbarTitle">Chats</string>
+    <string name="txtToolbarTitle">Chats recientes</string>
     <string name="txtToolbarContactsTitle">Contactos</string>
     <string name="txtUsuariosNoReg">No se encontraron usuarios registrados</string>
     <string name="lblContactName">Nombre</string>

@@ -95,7 +95,8 @@ public class ChatActivity extends AppCompatActivity {
                 return;
             }
 
-            chatViewModel.sendMessage(chatId, currentUserId, text, new ChatViewModel.MessageCallback() {
+            chatViewModel.sendMessage(chatId, currentUserId, userId, text, new ChatViewModel.MessageCallback() {
+
                 @Override
                 public void onSuccess() {
                     binding.txtMessage.setText("");

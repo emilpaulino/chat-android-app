@@ -1,34 +1,39 @@
 package com.pucmm.chatapp.ui.chat;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
-import com.pucmm.chatapp.databinding.ItemChatBinding;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.pucmm.chatapp.data.model.Chat;
+import com.pucmm.chatapp.databinding.ItemChatBinding;
 
 import java.util.List;
 
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder> {
 
-    //Viewholder
+    public interface OnChatClickListener {
+        void onChatClick(Chat chat);
+    }
+
     public static class ChatViewHolder extends RecyclerView.ViewHolder {
         final ItemChatBinding binding;
+
         public ChatViewHolder(@NonNull ItemChatBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }
     }
 
-    private List<Chat> chatList;
+    private final List<Chat> chatList;
+    private final OnChatClickListener listener;
 
-    public ChatAdapter(List<Chat> chatList){
+    public ChatAdapter(List<Chat> chatList, OnChatClickListener listener) {
         this.chatList = chatList;
+        this.listener = listener;
     }
 
-    // Inflamos el diseño de la fila item chat
     @NonNull
     @Override
     public ChatViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -36,18 +41,18 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
         return new ChatViewHolder(binding);
     }
 
-    // Ponemos los datos de la lista en los TextViews correspondientes
     @Override
     public void onBindViewHolder(@NonNull ChatViewHolder holder, int position) {
         Chat chat = chatList.get(position);
         holder.binding.txtUserName.setText(chat.getUser().getUserName());
         holder.binding.txtMessageDesc.setText(chat.getLastMessage().getText());
+        holder.itemView.setOnClickListener(v -> {
+            listener.onChatClick(chat);
+        });
     }
 
     @Override
     public int getItemCount() {
         return chatList.size();
     }
-
-
 }
