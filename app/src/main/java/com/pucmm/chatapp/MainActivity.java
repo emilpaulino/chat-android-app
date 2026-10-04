@@ -23,6 +23,7 @@ import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.pucmm.chatapp.data.model.Chat;
 import com.pucmm.chatapp.databinding.ActivityMainBinding;
+import com.pucmm.chatapp.ui.auth.LoginActivity;
 import com.pucmm.chatapp.ui.chat.ChatAdapter;
 import com.pucmm.chatapp.ui.users.UsersActivity;
 import com.pucmm.chatapp.viewmodel.ChatViewModel;
@@ -53,6 +54,22 @@ public class MainActivity extends AppCompatActivity {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 100);
             }
         }
+
+        binding.toolbarConversation.inflateMenu(R.menu.menu_main);
+
+        binding.toolbarConversation.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.action_logout) {
+                FirebaseAuth.getInstance().signOut();
+
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+
+                return true;
+            }
+
+            return false;
+        });
 
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
 

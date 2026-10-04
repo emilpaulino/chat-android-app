@@ -19,4 +19,5 @@
     <string name="lblContactName">Nombre</string>
     <string name="txtLastMessage">Ultimo mensaje...</string>
     <string name="lblContactEmail">email@email.com</string>
+    <string name="lblCerrarSesion">Cerrar Sesión</string>
 </resources>
