@@ -23,4 +23,8 @@ public class AuthViewModel extends ViewModel {
         authRepository.logout();
     }
 
+    public String getCurrentUserId() {
+        return authRepository.getCurrentUserId();
+    }
+
 }

@@ -80,4 +80,12 @@ public class AuthRepository {
         firebaseAuth.signOut();
     }
 
+    public String getCurrentUserId() {
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        if (user != null) {
+            return user.getUid();
+        }
+        return null;
+    }
+
 }

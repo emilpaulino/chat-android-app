@@ -4,6 +4,7 @@ import com.google.firebase.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.pucmm.chatapp.data.model.User;
 
 import java.util.ArrayList;
@@ -18,13 +19,16 @@ public class UserRepository {
 
     public interface UserCallback {
         void onSuccess(User user);
-
         void onError(String error);
     }
 
     public interface UsersCallback {
         void onSuccess(List<User> users);
+        void onError(String error);
+    }
 
+    public interface TokenCallback {
+        void onSuccess();
         void onError(String error);
     }
 
@@ -68,5 +72,22 @@ public class UserRepository {
         });
     }
 
+    public void updateFcmToken(String userId, TokenCallback callback) {
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
+
+            if (!task.isSuccessful()) {
+                callback.onError("Error al obtener el token");
+                return;
+            }
+
+            String token = task.getResult();
+
+            db.collection("users")
+                    .document(userId)
+                    .update("fcmToken", token)
+                    .addOnSuccessListener(aVoid -> callback.onSuccess())
+                    .addOnFailureListener(e -> callback.onError(e.getMessage()));
+        });
+    }
 
 }
