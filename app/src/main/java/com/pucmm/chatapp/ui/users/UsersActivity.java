@@ -13,7 +13,6 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.pucmm.chatapp.MainActivity;
 import com.pucmm.chatapp.R;
 import com.pucmm.chatapp.data.model.User;
@@ -21,6 +20,7 @@ import com.pucmm.chatapp.data.repository.UserRepository;
 import com.pucmm.chatapp.databinding.ActivityUsersBinding;
 import com.pucmm.chatapp.ui.auth.LoginActivity;
 import com.pucmm.chatapp.ui.chat.ChatActivity;
+import com.pucmm.chatapp.viewmodel.AuthViewModel;
 import com.pucmm.chatapp.viewmodel.UserViewModel;
 
 import java.util.List;
@@ -29,6 +29,7 @@ public class UsersActivity extends AppCompatActivity {
 
     private ActivityUsersBinding binding;
     private UserViewModel userViewModel;
+    private AuthViewModel authViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +44,6 @@ public class UsersActivity extends AppCompatActivity {
         WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView()).setAppearanceLightStatusBars(false);
         WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView()).setAppearanceLightNavigationBars(true);
 
-        binding.recyclerContacts.setLayoutManager(new LinearLayoutManager(this));
-
         ViewCompat.setOnApplyWindowInsetsListener(binding.getRoot(), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             Insets ime = insets.getInsets(WindowInsetsCompat.Type.ime());
@@ -54,34 +53,36 @@ public class UsersActivity extends AppCompatActivity {
             return insets;
         });
 
+        // Inicializando viewmodels
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+
+        // Configurando RecyclerView
+        binding.recyclerContacts.setLayoutManager(new LinearLayoutManager(this));
+
+        // Navegacion
         binding.imgChats.setOnClickListener(v -> {
             Intent intent = new Intent(UsersActivity.this, MainActivity.class);
             startActivity(intent);
         });
 
+        // Logout
         binding.imageView2.setOnClickListener(v -> {
             PopupMenu popupMenu = new PopupMenu(UsersActivity.this, binding.imageView2);
-
             popupMenu.getMenuInflater().inflate(R.menu.menu_main, popupMenu.getMenu());
-
             popupMenu.setOnMenuItemClickListener(item -> {
                 if (item.getItemId() == R.id.action_logout) {
-                    FirebaseAuth.getInstance().signOut();
-
+                    authViewModel.logout();
                     Intent intent = new Intent(UsersActivity.this, LoginActivity.class);
                     startActivity(intent);
                     finish();
-
                     return true;
                 }
-
                 return false;
             });
-
             popupMenu.show();
         });
 
-        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         cargarUsuarios();
     }
 
