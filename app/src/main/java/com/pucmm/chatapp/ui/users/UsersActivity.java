@@ -87,28 +87,26 @@ public class UsersActivity extends AppCompatActivity {
     }
 
     private void cargarUsuarios() {
+        String currentUserId = authViewModel.getCurrentUserId();
 
-        userViewModel.getUsers(new UserRepository.UsersCallback() {
-
+        userViewModel.getUsers(currentUserId, new UserRepository.UsersCallback() {
             @Override
             public void onSuccess(List<User> users) {
-
                 if (users.isEmpty()) {
                     binding.recyclerContacts.setVisibility(View.GONE);
                     binding.txtEmptyContacts.setVisibility(View.VISIBLE);
                 } else {
                     binding.recyclerContacts.setVisibility(View.VISIBLE);
                     binding.txtEmptyContacts.setVisibility(View.GONE);
+
                     ContactAdapter adapter = new ContactAdapter(users, user -> {
-
                         Intent intent = new Intent(UsersActivity.this, ChatActivity.class);
-
                         intent.putExtra("userId", user.getUserId());
                         intent.putExtra("userName", user.getUserName());
                         intent.putExtra("profileImage", user.getProfileImage());
-
                         startActivity(intent);
                     });
+
                     binding.recyclerContacts.setAdapter(adapter);
                 }
             }

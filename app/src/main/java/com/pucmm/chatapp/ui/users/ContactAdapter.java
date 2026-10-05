@@ -26,8 +26,8 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
         void onContactClick(User user);
     }
 
-    List<User> userList;
-    OnContactClickListener listener;
+    private final List<User> userList;
+    private final OnContactClickListener listener;
 
     public ContactAdapter(List<User> userList, OnContactClickListener listener) {
         this.userList = userList;

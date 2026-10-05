@@ -3,6 +3,7 @@ package com.pucmm.chatapp.data.repository;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -17,7 +18,6 @@ public class AuthRepository {
         db = FirebaseFirestore.getInstance("chat-app");
     }
 
-    // Interfaz para comunicar el resultado del registro al ViewModel.
     public interface AuthCallback {
         void onSuccess();
 
@@ -63,7 +63,6 @@ public class AuthRepository {
     }
 
     private void saveUserOnFirestore(FirebaseUser user, String name, String email, AuthCallback callback) {
-
         Map<String, Object> userData = new HashMap<>();
         userData.put("userName", name);
         userData.put("email", email);
@@ -77,7 +76,14 @@ public class AuthRepository {
     }
 
     public void logout() {
-        firebaseAuth.signOut();
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        if (user == null) {
+            return;
+        }
+        db.collection("users")
+                .document(user.getUid())
+                .update("fcmToken", FieldValue.delete())
+                .addOnCompleteListener(task -> firebaseAuth.signOut());
     }
 
     public String getCurrentUserId() {

@@ -29,6 +29,7 @@ public class ChatRepository {
         storage = FirebaseStorage.getInstance();
     }
 
+    // Generando ID único del chat
     public String generateChatId(String userId1, String userId2) {
 
         if (userId1.compareTo(userId2) < 0) {
@@ -61,6 +62,7 @@ public class ChatRepository {
         void onError(String error);
     }
 
+    // Enviando mensaje de texto
     public void sendMessage(String chatId, String senderId, String receiverId, String text, MessageCallback callback) {
 
         String messageId = db.collection("chats")
@@ -107,10 +109,8 @@ public class ChatRepository {
                 .addOnFailureListener(e -> callback.onError(e.getMessage()));
     }
 
-    public ListenerRegistration listenMessages(
-            String chatId,
-            MessagesCallback callback
-    ) {
+    // Escuchando mensajes en tiempo real
+    public ListenerRegistration listenMessages(String chatId, MessagesCallback callback) {
 
         return db.collection("chats")
                 .document(chatId)
@@ -149,93 +149,125 @@ public class ChatRepository {
                 });
     }
 
+    // Escuchando conversaciones en tiempo real
+    // Escuchando conversaciones en tiempo real
     public ListenerRegistration listenChats(String currentUserId, ChatsCallback callback) {
 
-        return db.collection("chats").whereArrayContains("participants", currentUserId).addSnapshotListener((querySnapshot, error) -> {
+        return db.collection("chats")
+                .whereArrayContains("participants", currentUserId)
+                .addSnapshotListener((querySnapshot, error) -> {
 
-            if (error != null) {
-                callback.onError(error.getMessage());
-                return;
-            }
-
-            if (querySnapshot == null) {
-                callback.onSuccess(new ArrayList<>());
-                return;
-            }
-
-            List<Chat> chats = new ArrayList<>();
-
-            for (DocumentSnapshot document : querySnapshot.getDocuments()) {
-
-                String chatId = document.getId();
-                List<String> participants = (List<String>) document.get("participants");
-                String otherUserId = null;
-
-                if (participants != null) {
-                    for (String participantId : participants) {
-                        if (!participantId.equals(currentUserId)) {
-                            otherUserId = participantId;
-                            break;
-                        }
+                    if (error != null) {
+                        callback.onError(error.getMessage());
+                        return;
                     }
-                }
 
-                if (otherUserId == null) {
-                    continue;
-                }
+                    if (querySnapshot == null) {
+                        callback.onSuccess(new ArrayList<>());
+                        return;
+                    }
 
-                String lastMessageText = document.getString("lastMessage");
-                String lastMessageSenderId = document.getString("lastMessageSenderId");
-                String lastMessageType = document.getString("lastMessageType");
-                String lastMessageImageUrl = document.getString("lastMessageImageUrl");
-                Timestamp timestamp = document.getTimestamp("lastMessageTimestamp");
+                    List<Chat> chats = new ArrayList<>();
+                    List<DocumentSnapshot> validDocuments = new ArrayList<>();
 
-                Date lastMessageDate = null;
-                if (timestamp != null) {
-                    lastMessageDate = timestamp.toDate();
-                }
+                    for (DocumentSnapshot document : querySnapshot.getDocuments()) {
 
-                Message lastMessage = new Message("", lastMessageSenderId, lastMessageText, lastMessageDate, lastMessageType, lastMessageImageUrl);
-                String finalOtherUserId = otherUserId;
+                        List<String> participants = (List<String>) document.get("participants");
 
-                UserRepository userRepository = new UserRepository();
-                userRepository.getUser(finalOtherUserId, new UserRepository.UserCallback() {
-                    @Override
-                    public void onSuccess(User user) {
-                        Chat chat = new Chat(chatId, user, lastMessage);
-                        chats.add(chat);
-                        if (chats.size() == querySnapshot.size()) {
-                            chats.sort((chat1, chat2) -> {
-                                Date date1 = chat1.getLastMessage().getTimestamp();
-                                Date date2 = chat2.getLastMessage().getTimestamp();
-                                if (date1 == null && date2 == null) {
-                                    return 0;
+                        String otherUserId = null;
+
+                        if (participants != null) {
+                            for (String participantId : participants) {
+                                if (!participantId.equals(currentUserId)) {
+                                    otherUserId = participantId;
+                                    break;
                                 }
-                                if (date1 == null) {
-                                    return 1;
-                                }
-                                if (date2 == null) {
-                                    return -1;
-                                }
-                                return date2.compareTo(date1);
-                            });
-                            callback.onSuccess(chats);
+                            }
+                        }
+
+                        if (otherUserId != null) {
+                            validDocuments.add(document);
                         }
                     }
 
-                    @Override
-                    public void onError(String error) {
-                        callback.onError(error);
+                    if (validDocuments.isEmpty()) {
+                        callback.onSuccess(chats);
+                        return;
+                    }
+
+                    for (DocumentSnapshot document : validDocuments) {
+
+                        String chatId = document.getId();
+
+                        List<String> participants = (List<String>) document.get("participants");
+
+                        String otherUserId = null;
+
+                        for (String participantId : participants) {
+                            if (!participantId.equals(currentUserId)) {
+                                otherUserId = participantId;
+                                break;
+                            }
+                        }
+
+                        String lastMessageText = document.getString("lastMessage");
+                        String lastMessageSenderId = document.getString("lastMessageSenderId");
+                        String lastMessageType = document.getString("lastMessageType");
+                        String lastMessageImageUrl = document.getString("lastMessageImageUrl");
+
+                        Timestamp timestamp = document.getTimestamp("lastMessageTimestamp");
+
+                        Date lastMessageDate = null;
+
+                        if (timestamp != null) {
+                            lastMessageDate = timestamp.toDate();
+                        }
+
+                        Message lastMessage = new Message("", lastMessageSenderId, lastMessageText, lastMessageDate, lastMessageType, lastMessageImageUrl);
+
+                        String finalOtherUserId = otherUserId;
+
+                        UserRepository userRepository = new UserRepository();
+                        userRepository.getUser(finalOtherUserId, new UserRepository.UserCallback() {
+                            @Override
+                            public void onSuccess(User user) {
+                                Chat chat = new Chat(chatId, user, lastMessage);
+                                chats.add(chat);
+
+                                if (chats.size() == validDocuments.size()) {
+                                    chats.sort((chat1, chat2) -> {
+                                        Date date1 = chat1.getLastMessage().getTimestamp();
+                                        Date date2 = chat2.getLastMessage().getTimestamp();
+
+                                        if (date1 == null && date2 == null) {
+                                            return 0;
+                                        }
+
+                                        if (date1 == null) {
+                                            return 1;
+                                        }
+
+                                        if (date2 == null) {
+                                            return -1;
+                                        }
+
+                                        return date2.compareTo(date1);
+                                    });
+
+                                    callback.onSuccess(chats);
+                                }
+                            }
+
+                            @Override
+                            public void onError(String error) {
+                                callback.onError(error);
+                            }
+                        });
                     }
                 });
-            }
-
-            if (querySnapshot.isEmpty()) {
-                callback.onSuccess(chats);
-            }
-        });
     }
 
+    // Enviando imagen
     public void sendImage(String chatId, String senderId, String receiverId, Uri imageUri, ImageCallback callback) {
 
         String messageId = db.collection("chats").document(chatId).collection("messages").document().getId();

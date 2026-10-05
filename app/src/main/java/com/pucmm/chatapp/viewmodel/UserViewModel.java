@@ -15,11 +15,15 @@ public class UserViewModel extends ViewModel {
         userRepository.getUser(userId, callback);
     }
 
-    public void getUsers(UserRepository.UsersCallback callback) {
-        userRepository.getUsers(callback);
+    public void getUsers(String currentUserId, UserRepository.UsersCallback callback) {
+        userRepository.getUsers(currentUserId, callback);
     }
 
     public void updateFcmToken(String userId, UserRepository.TokenCallback callback) {
         userRepository.updateFcmToken(userId, callback);
+    }
+
+    public void removeFcmToken(String userId, UserRepository.TokenCallback callback) {
+        userRepository.removeFcmToken(userId, callback);
     }
 }

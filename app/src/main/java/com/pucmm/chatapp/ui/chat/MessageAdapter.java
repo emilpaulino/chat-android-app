@@ -19,6 +19,20 @@ import java.util.Locale;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder> {
 
+    public static class MessageViewHolder extends RecyclerView.ViewHolder {
+        TextView txtMessage;
+        TextView txtTime;
+        ImageView imgMessage;
+
+        public MessageViewHolder(@NonNull View itemView) {
+            super(itemView);
+
+            txtMessage = itemView.findViewById(R.id.txtMessage);
+            txtTime = itemView.findViewById(R.id.txtTime);
+            imgMessage = itemView.findViewById(R.id.imgMessage);
+        }
+    }
+
     private final List<Message> messageList;
     private final String currentUserId;
 
@@ -39,6 +53,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         }
     }
 
+    // Creando el tipo de mensaje
     @NonNull
     @Override
     public MessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -51,13 +66,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         }
 
         View view = LayoutInflater.from(parent.getContext()).inflate(layout, parent, false);
-
         return new MessageViewHolder(view);
     }
 
+    // Creando la vista del mensaje
     @Override
     public void onBindViewHolder(@NonNull MessageViewHolder holder, int position) {
-
         Message message = messageList.get(position);
 
         if ("image".equals(message.getType())) {
@@ -67,7 +81,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             Glide.with(holder.itemView.getContext())
                     .load(message.getImageUrl())
                     .into(holder.imgMessage);
-
         } else {
             holder.imgMessage.setVisibility(View.GONE);
             holder.txtMessage.setVisibility(View.VISIBLE);
@@ -85,17 +98,5 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         return messageList.size();
     }
 
-    public static class MessageViewHolder extends RecyclerView.ViewHolder {
-        TextView txtMessage;
-        TextView txtTime;
-        ImageView imgMessage;
 
-        public MessageViewHolder(@NonNull View itemView) {
-            super(itemView);
-
-            txtMessage = itemView.findViewById(R.id.txtMessage);
-            txtTime = itemView.findViewById(R.id.txtTime);
-            imgMessage = itemView.findViewById(R.id.imgMessage);
-        }
-    }
 }

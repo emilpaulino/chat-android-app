@@ -1,6 +1,5 @@
 package com.pucmm.chatapp.data.repository;
 
-import com.google.firebase.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -48,11 +47,10 @@ public class UserRepository {
         });
     }
 
-    public void getUsers(UsersCallback callback) {
+    public void getUsers(String currentUserId, UsersCallback callback) {
         db.collection("users").get().addOnSuccessListener(querySnapshot -> {
 
             List<User> users = new ArrayList<>();
-            String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
             for (DocumentSnapshot document : querySnapshot.getDocuments()) {
                 if(document.getId().equals(currentUserId)){
@@ -88,6 +86,14 @@ public class UserRepository {
                     .addOnSuccessListener(aVoid -> callback.onSuccess())
                     .addOnFailureListener(e -> callback.onError(e.getMessage()));
         });
+    }
+
+    public void removeFcmToken(String userId, TokenCallback callback) {
+        db.collection("users")
+                .document(userId)
+                .update("fcmToken", com.google.firebase.firestore.FieldValue.delete())
+                .addOnSuccessListener(aVoid -> callback.onSuccess())
+                .addOnFailureListener(e -> callback.onError(e.getMessage()));
     }
 
 }

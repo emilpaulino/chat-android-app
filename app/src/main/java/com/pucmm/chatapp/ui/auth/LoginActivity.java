@@ -28,14 +28,16 @@ public class LoginActivity extends AppCompatActivity {
 
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
 
         EdgeToEdge.enable(this);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.recyclerChats), (v, insets) -> {
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        // Inicializando viewmodel
+        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
 
         binding.txtRegister.setOnClickListener(v -> {
             Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
@@ -46,7 +48,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void iniciarSesion() {
-
         String email = binding.txtEmailLogin.getText().toString().trim();
         String password = binding.txtPassword.getText().toString().trim();
 
@@ -55,7 +56,6 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         authViewModel.login(email, password, new AuthRepository.AuthCallback() {
-
             @Override
             public void onSuccess() {
                 Toast.makeText(LoginActivity.this, "Se ha iniciado sesión correctamente", Toast.LENGTH_SHORT).show();
@@ -63,7 +63,6 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             }
-
             @Override
             public void onError(String error) {
                 Toast.makeText(LoginActivity.this, error, Toast.LENGTH_LONG).show();
@@ -72,25 +71,21 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private boolean validarCampos(String email, String password) {
-
         if (email.isEmpty()) {
             binding.txtEmailLogin.setError("Ingrese su correo");
             binding.txtEmailLogin.requestFocus();
             return false;
         }
-
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             binding.txtEmailLogin.setError("Ingrese un correo electrónico válido");
             binding.txtEmailLogin.requestFocus();
             return false;
         }
-
         if (password.isEmpty()) {
             binding.txtPassword.setError("Ingrese su contraseña");
             binding.txtPassword.requestFocus();
             return false;
         }
-
         return true;
     }
 }

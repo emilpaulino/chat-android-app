@@ -1,11 +1,11 @@
 package com.pucmm.chatapp.ui.chat;
 
 import android.content.ContentValues;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -17,11 +17,11 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.pucmm.chatapp.data.model.Message;
 import com.pucmm.chatapp.databinding.ActivityChatBinding;
 import com.pucmm.chatapp.R;
+import com.pucmm.chatapp.viewmodel.AuthViewModel;
 import com.pucmm.chatapp.viewmodel.ChatViewModel;
 
 import java.util.ArrayList;
@@ -31,6 +31,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private ActivityChatBinding binding;
     private ChatViewModel chatViewModel;
+    private AuthViewModel authViewModel;
     private String currentUserId;
     private String chatId;
     private MessageAdapter messageAdapter;
@@ -51,7 +52,6 @@ public class ChatActivity extends AppCompatActivity {
         WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView()).setAppearanceLightStatusBars(false);
         WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView()).setAppearanceLightNavigationBars(true);
 
-
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             Insets ime = insets.getInsets(WindowInsetsCompat.Type.ime());
@@ -67,59 +67,25 @@ public class ChatActivity extends AppCompatActivity {
 
         binding.txtUserName.setText(userName);
 
-        currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        // Inicializando ViewModels
+        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
         chatViewModel = new ViewModelProvider(this).get(ChatViewModel.class);
 
-        galleryLauncher = registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
-                    if (uri != null) {
-                        chatViewModel.sendImage(chatId, currentUserId, userId, uri, new ChatViewModel.ImageCallback() {
-                                    @Override
-                                    public void onSuccess() {
-                                    }
+        currentUserId = authViewModel.getCurrentUserId();
 
-                                    @Override
-                                    public void onError(String error) {
-                                    }
-                                }
-                        );
-                    }
-                }
-        );
-
-        cameraLauncher = registerForActivityResult(new ActivityResultContracts.TakePicturePreview(), bitmap -> {
-
-            if (bitmap == null) {
-                return;
-            }
-
-            Uri imageUri = saveBitmapToGallery(bitmap);
-            if (imageUri == null) {
-                return;
-            }
-
-            chatViewModel.sendImage(chatId, currentUserId, userId, imageUri, new ChatViewModel.ImageCallback() {
-                @Override
-                public void onSuccess() {
-                }
-
-                @Override
-                public void onError(String error) {
-                }
-            });
-        });
-
+        // Configurando la conversación
         chatId = chatViewModel.generateChatId(currentUserId, userId);
         List<Message> messageList = new ArrayList<>();
         messageAdapter = new MessageAdapter(messageList, currentUserId);
 
+        // Configurando RecyclerView
         binding.recyclerConversation.setLayoutManager(new LinearLayoutManager(this));
         binding.recyclerConversation.setAdapter(messageAdapter);
 
+        // Escuchando mensajes en tiempo real
         messageListener = chatViewModel.listenMessages(chatId, new ChatViewModel.MessagesCallback() {
-
             @Override
             public void onSuccess(List<Message> messages) {
-
                 messageList.clear();
                 messageList.addAll(messages);
 
@@ -129,12 +95,13 @@ public class ChatActivity extends AppCompatActivity {
                     binding.recyclerConversation.scrollToPosition(messages.size() - 1);
                 }
             }
-
             @Override
             public void onError(String error) {
+                Log.e("CHAT", "Error al cargar mensajes: " + error);
             }
         });
 
+        // Enviando mensaje
         binding.btnSend.setOnClickListener(v -> {
             String text = binding.txtMessage.getText().toString().trim();
 
@@ -147,13 +114,13 @@ public class ChatActivity extends AppCompatActivity {
                 public void onSuccess() {
                     binding.txtMessage.setText("");
                 }
-
                 @Override
                 public void onError(String error) {
                 }
             });
         });
 
+        // Seleccionando imagen desde la galeria
         galleryLauncher = registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
             if (uri != null) {
                 chatViewModel.sendImage(chatId, currentUserId, userId, uri, new ChatViewModel.ImageCallback() {
@@ -163,16 +130,16 @@ public class ChatActivity extends AppCompatActivity {
 
                     @Override
                     public void onError(String error) {
-                        android.util.Log.e("CHAT_IMAGE", "Error al subir imagen: " + error);
+                       Log.e("CHAT_IMAGE", "Error al subir imagen: " + error);
                     }
                 });
             }
         });
 
+        // Tomando imagen desde la camar
         cameraLauncher = registerForActivityResult(new ActivityResultContracts.TakePicturePreview(), bitmap -> {
             if (bitmap != null) {
                 Uri imageUri = saveBitmapToGallery(bitmap);
-
                 if (imageUri == null) {
                     return;
                 }
@@ -181,7 +148,6 @@ public class ChatActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess() {
                     }
-
                     @Override
                     public void onError(String error) {
                         android.util.Log.e("CHAT_IMAGE", "Error al subir imagen: " + error);
@@ -190,12 +156,11 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
+        // Mostrando opciones para enviar imagenes
         binding.btnImage.setOnClickListener(v -> {
-
             String[] options = {"Cámara", "Galería"};
 
             new androidx.appcompat.app.AlertDialog.Builder(ChatActivity.this).setTitle("Seleccionar imagen").setItems(options, (dialog, which) -> {
-
                 if (which == 0) {
                     cameraLauncher.launch(null);
                 } else {
@@ -204,6 +169,7 @@ public class ChatActivity extends AppCompatActivity {
             }).show();
         });
 
+        // Volver atras
         binding.toolbarConversation.setNavigationOnClickListener(v -> {
             finish();
         });

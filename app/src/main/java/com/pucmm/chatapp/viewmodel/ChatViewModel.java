@@ -47,9 +47,7 @@ public class ChatViewModel extends ViewModel {
     }
 
     public void sendMessage(String chatId, String senderId, String receiverId, String text, MessageCallback callback) {
-
         chatRepository.sendMessage(chatId, senderId, receiverId, text, new ChatRepository.MessageCallback() {
-
             @Override
             public void onSuccess() {
                 callback.onSuccess();
@@ -63,14 +61,12 @@ public class ChatViewModel extends ViewModel {
     }
 
     public void sendImage(String chatId, String senderId, String receiverId, Uri imageUri, ImageCallback callback) {
-
         chatRepository.sendImage(chatId, senderId, receiverId, imageUri, new ChatRepository.ImageCallback() {
 
             @Override
             public void onSuccess() {
                 callback.onSuccess();
             }
-
             @Override
             public void onError(String error) {
                 callback.onError(error);
@@ -84,7 +80,6 @@ public class ChatViewModel extends ViewModel {
             public void onSuccess(List<Message> messages) {
                 callback.onSuccess(messages);
             }
-
             @Override
             public void onError(String error) {
                 callback.onError(error);
@@ -93,14 +88,11 @@ public class ChatViewModel extends ViewModel {
     }
 
     public ListenerRegistration listenChats(String currentUserId, ChatsCallback callback) {
-
         return chatRepository.listenChats(currentUserId, new ChatRepository.ChatsCallback() {
-
             @Override
             public void onSuccess(List<Chat> chats) {
                 callback.onSuccess(chats);
             }
-
             @Override
             public void onError(String error) {
                 callback.onError(error);
