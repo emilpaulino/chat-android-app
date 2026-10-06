@@ -84,8 +84,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // Configurando el toolbar
-        binding.toolbarConversation.inflateMenu(R.menu.menu_main);
-        binding.toolbarConversation.setOnMenuItemClickListener(item -> {
+        binding.toolbarChat.inflateMenu(R.menu.menu_main);
+        binding.toolbarChat.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.action_logout) {
                 authViewModel.logout();
 

@@ -150,7 +150,6 @@ public class ChatRepository {
     }
 
     // Escuchando conversaciones en tiempo real
-    // Escuchando conversaciones en tiempo real
     public ListenerRegistration listenChats(String currentUserId, ChatsCallback callback) {
 
         return db.collection("chats")

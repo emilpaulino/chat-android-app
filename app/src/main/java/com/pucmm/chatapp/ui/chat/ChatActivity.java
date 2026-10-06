@@ -57,7 +57,7 @@ public class ChatActivity extends AppCompatActivity {
             Insets ime = insets.getInsets(WindowInsetsCompat.Type.ime());
             int bottomPadding = Math.max(systemBars.bottom, ime.bottom);
             v.setPadding(0, 0, 0, bottomPadding);
-            binding.toolbarConversation.setPadding(0, systemBars.top, 0, 0);
+            binding.toolbarChat.setPadding(0, systemBars.top, 0, 0);
             return insets;
         });
 
@@ -79,8 +79,8 @@ public class ChatActivity extends AppCompatActivity {
         messageAdapter = new MessageAdapter(messageList, currentUserId);
 
         // Configurando RecyclerView
-        binding.recyclerConversation.setLayoutManager(new LinearLayoutManager(this));
-        binding.recyclerConversation.setAdapter(messageAdapter);
+        binding.recyclerChat.setLayoutManager(new LinearLayoutManager(this));
+        binding.recyclerChat.setAdapter(messageAdapter);
 
         // Escuchando mensajes en tiempo real
         messageListener = chatViewModel.listenMessages(chatId, new ChatViewModel.MessagesCallback() {
@@ -92,7 +92,7 @@ public class ChatActivity extends AppCompatActivity {
                 messageAdapter.notifyDataSetChanged();
 
                 if (!messages.isEmpty()) {
-                    binding.recyclerConversation.scrollToPosition(messages.size() - 1);
+                    binding.recyclerChat.scrollToPosition(messages.size() - 1);
                 }
             }
             @Override
@@ -170,7 +170,7 @@ public class ChatActivity extends AppCompatActivity {
         });
 
         // Volver atras
-        binding.toolbarConversation.setNavigationOnClickListener(v -> {
+        binding.toolbarChat.setNavigationOnClickListener(v -> {
             finish();
         });
 

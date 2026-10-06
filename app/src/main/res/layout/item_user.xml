@@ -27,7 +27,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="12dp"
         android:layout_marginEnd="16dp"
-        android:text="@string/lblContactName"
+        android:text="@string/lblUserName"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imgProfile"
@@ -44,7 +44,7 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:singleLine="true"
-        android:text="@string/lblContactEmail"
+        android:text="@string/lblUserEmail"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imgProfile"
         app:layout_constraintTop_toBottomOf="@+id/txtUserName" />

@@ -18,11 +18,11 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbarConversation"
+            android:id="@+id/toolbarChat"
             android:layout_width="match_parent"
             android:layout_height="64dp"
             android:background="@color/primary"
-            app:title="@string/txtToolbarContactsTitle"
+            app:title="@string/txtToolbarUsersTitle"
             app:titleTextColor="@color/white" />
 
         <ImageView
@@ -44,7 +44,7 @@
     </FrameLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerContacts"
+        android:id="@+id/recyclerUsers"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="5dp"
@@ -90,6 +90,7 @@
             android:layout_marginStart="12dp"
             android:layout_weight="1"
             android:padding="12dp"
+            android:tint="@color/google_stroke"
             app:srcCompat="@drawable/outline_contacts_24" />
     </LinearLayout>
 

@@ -1,4 +1,4 @@
-package com.pucmm.chatapp;
+package com.pucmm.chatapp.service;
 
 import android.Manifest;
 import android.app.NotificationChannel;
@@ -17,6 +17,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.pucmm.chatapp.MainActivity;
+import com.pucmm.chatapp.R;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 

@@ -58,7 +58,7 @@ public class UsersActivity extends AppCompatActivity {
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
 
         // Configurando RecyclerView
-        binding.recyclerContacts.setLayoutManager(new LinearLayoutManager(this));
+        binding.recyclerUsers.setLayoutManager(new LinearLayoutManager(this));
 
         // Navegacion
         binding.imgChats.setOnClickListener(v -> {
@@ -93,13 +93,13 @@ public class UsersActivity extends AppCompatActivity {
             @Override
             public void onSuccess(List<User> users) {
                 if (users.isEmpty()) {
-                    binding.recyclerContacts.setVisibility(View.GONE);
+                    binding.recyclerUsers.setVisibility(View.GONE);
                     binding.txtEmptyContacts.setVisibility(View.VISIBLE);
                 } else {
-                    binding.recyclerContacts.setVisibility(View.VISIBLE);
+                    binding.recyclerUsers.setVisibility(View.VISIBLE);
                     binding.txtEmptyContacts.setVisibility(View.GONE);
 
-                    ContactAdapter adapter = new ContactAdapter(users, user -> {
+                    UserAdapter adapter = new UserAdapter(users, user -> {
                         Intent intent = new Intent(UsersActivity.this, ChatActivity.class);
                         intent.putExtra("userId", user.getUserId());
                         intent.putExtra("userName", user.getUserName());
@@ -107,13 +107,13 @@ public class UsersActivity extends AppCompatActivity {
                         startActivity(intent);
                     });
 
-                    binding.recyclerContacts.setAdapter(adapter);
+                    binding.recyclerUsers.setAdapter(adapter);
                 }
             }
 
             @Override
             public void onError(String error) {
-                binding.recyclerContacts.setVisibility(View.GONE);
+                binding.recyclerUsers.setVisibility(View.GONE);
                 binding.txtEmptyContacts.setVisibility(View.VISIBLE);
                 binding.txtEmptyContacts.setText(error);
             }

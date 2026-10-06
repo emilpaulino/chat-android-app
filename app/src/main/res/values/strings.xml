@@ -14,10 +14,10 @@
     <string name="txtRegLog">¿No tienes cuenta? Regístrate</string>
     <string name="txtName">Nombre completo</string>
     <string name="txtToolbarTitle">Chats recientes</string>
-    <string name="txtToolbarContactsTitle">Contactos</string>
+    <string name="txtToolbarUsersTitle">Usuarios</string>
     <string name="txtUsuariosNoReg">No se encontraron usuarios registrados</string>
-    <string name="lblContactName">Nombre</string>
+    <string name="lblUserName">Nombre</string>
     <string name="txtLastMessage">Ultimo mensaje...</string>
-    <string name="lblContactEmail">email@email.com</string>
+    <string name="lblUserEmail">email@email.com</string>
     <string name="lblCerrarSesion">Cerrar Sesión</string>
 </resources>

@@ -9,7 +9,7 @@
     tools:context=".ui.chat.ChatActivity">
 
     <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbarConversation"
+        android:id="@+id/toolbarChat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="64dp"
@@ -92,7 +92,7 @@
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerConversation"
+        android:id="@+id/recyclerChat"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="5dp"
@@ -100,6 +100,6 @@
         app:layout_constraintBottom_toTopOf="@+id/messageContainer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbarConversation" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbarChat" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

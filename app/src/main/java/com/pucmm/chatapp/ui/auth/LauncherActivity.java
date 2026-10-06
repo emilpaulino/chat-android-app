@@ -1,4 +1,4 @@
-package com.pucmm.chatapp;
+package com.pucmm.chatapp.ui.auth;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,7 +6,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.pucmm.chatapp.ui.auth.LoginActivity;
+import com.pucmm.chatapp.MainActivity;
 
 public class LauncherActivity extends AppCompatActivity {
 

@@ -20,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbarConversation"
+            android:id="@+id/toolbarChat"
             android:layout_width="match_parent"
             android:layout_height="64dp"
             android:background="@color/primary"
@@ -70,6 +70,7 @@
             android:layout_height="48dp"
             android:layout_weight="1"
             android:padding="12dp"
+            android:tint="@color/google_stroke"
             app:srcCompat="@drawable/outline_chat_24" />
 
         <ImageView

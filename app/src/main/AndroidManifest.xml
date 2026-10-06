@@ -19,7 +19,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Chatandroidapp">
         <activity
-            android:name=".LauncherActivity"
+            android:name=".ui.auth.LauncherActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
@@ -58,7 +58,7 @@
             android:windowSoftInputMode="adjustResize" />
 
         <service
-            android:name=".MyFirebaseMessagingService"
+            android:name=".service.MyFirebaseMessagingService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
