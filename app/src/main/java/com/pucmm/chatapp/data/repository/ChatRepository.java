@@ -4,6 +4,7 @@ import android.net.Uri;
 
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
@@ -76,7 +77,7 @@ public class ChatRepository {
         messageData.put("messageId", messageId);
         messageData.put("senderId", senderId);
         messageData.put("text", text);
-        messageData.put("timestamp", new Date());
+        messageData.put("timestamp", FieldValue.serverTimestamp());
         messageData.put("type", "text");
         messageData.put("imageUrl", null);
 
@@ -96,7 +97,7 @@ public class ChatRepository {
                     chatData.put("participants", participants);
                     chatData.put("lastMessage", text);
                     chatData.put("lastMessageSenderId", senderId);
-                    chatData.put("lastMessageTimestamp", new Date());
+                    chatData.put("lastMessageTimestamp", FieldValue.serverTimestamp());
                     chatData.put("lastMessageType", "text");
                     chatData.put("lastMessageImageUrl", null);
 
@@ -284,7 +285,7 @@ public class ChatRepository {
                 messageData.put("messageId", messageId);
                 messageData.put("senderId", senderId);
                 messageData.put("text", null);
-                messageData.put("timestamp", new Date());
+                messageData.put("timestamp", FieldValue.serverTimestamp());
                 messageData.put("type", "image");
                 messageData.put("imageUrl", imageUrl);
 
@@ -300,7 +301,7 @@ public class ChatRepository {
                     chatData.put("participants", participants);
                     chatData.put("lastMessage", "Imagen");
                     chatData.put("lastMessageSenderId", senderId);
-                    chatData.put("lastMessageTimestamp", new Date());
+                    chatData.put("lastMessageTimestamp", FieldValue.serverTimestamp());
                     chatData.put("lastMessageType", "image");
                     chatData.put("lastMessageImageUrl", imageUrl);
 
