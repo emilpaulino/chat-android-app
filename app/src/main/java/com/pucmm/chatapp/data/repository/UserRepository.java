@@ -1,9 +1,12 @@
 package com.pucmm.chatapp.data.repository;
 
+import android.net.Uri;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.storage.FirebaseStorage;
 import com.pucmm.chatapp.data.model.User;
 
 import java.util.ArrayList;
@@ -93,6 +96,34 @@ public class UserRepository {
                 .document(userId)
                 .update("fcmToken", com.google.firebase.firestore.FieldValue.delete())
                 .addOnSuccessListener(aVoid -> callback.onSuccess())
+                .addOnFailureListener(e -> callback.onError(e.getMessage()));
+    }
+
+    public void updateUserName(String userId, String userName, TokenCallback callback) {
+        db.collection("users")
+                .document(userId)
+                .update("userName", userName)
+                .addOnSuccessListener(aVoid -> callback.onSuccess())
+                .addOnFailureListener(e -> callback.onError(e.getMessage()));
+    }
+
+    public void updateProfileImage(String userId, Uri imageUri, TokenCallback callback) {
+        FirebaseStorage.getInstance()
+                .getReference()
+                .child("profile_images")
+                .child(userId + ".jpg")
+                .putFile(imageUri)
+                .addOnSuccessListener(taskSnapshot ->
+                        taskSnapshot.getStorage().getDownloadUrl()
+                                .addOnSuccessListener(uri ->
+                                        db.collection("users")
+                                                .document(userId)
+                                                .update("profileImage", uri.toString())
+                                                .addOnSuccessListener(aVoid -> callback.onSuccess())
+                                                .addOnFailureListener(e -> callback.onError(e.getMessage()))
+                                )
+                                .addOnFailureListener(e -> callback.onError(e.getMessage()))
+                )
                 .addOnFailureListener(e -> callback.onError(e.getMessage()));
     }
 

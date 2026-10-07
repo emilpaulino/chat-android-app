@@ -10,6 +10,7 @@ import android.util.Log;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
@@ -17,6 +18,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.pucmm.chatapp.data.model.Message;
 import com.pucmm.chatapp.databinding.ActivityChatBinding;
@@ -57,13 +59,27 @@ public class ChatActivity extends AppCompatActivity {
             Insets ime = insets.getInsets(WindowInsetsCompat.Type.ime());
             int bottomPadding = Math.max(systemBars.bottom, ime.bottom);
             v.setPadding(0, 0, 0, bottomPadding);
-            binding.toolbarChat.setPadding(0, systemBars.top, 0, 0);
+            binding.toolbarProfile.setPadding(0, systemBars.top, 0, 0);
             return insets;
         });
 
         String userId = getIntent().getStringExtra("userId");
         String userName = getIntent().getStringExtra("userName");
         String profileImage = getIntent().getStringExtra("profileImage");
+
+        if (profileImage != null && !profileImage.isEmpty()) {
+            binding.imgProfile.clearColorFilter();
+
+            Glide.with(ChatActivity.this)
+                    .load(profileImage)
+                    .circleCrop()
+                    .into(binding.imgProfile);
+        } else {
+            binding.imgProfile.setImageResource(R.drawable.ic_acc_circle);
+            binding.imgProfile.setColorFilter(
+                    ContextCompat.getColor(ChatActivity.this, R.color.white)
+            );
+        }
 
         binding.txtUserName.setText(userName);
 
@@ -170,7 +186,7 @@ public class ChatActivity extends AppCompatActivity {
         });
 
         // Volver atras
-        binding.toolbarChat.setNavigationOnClickListener(v -> {
+        binding.toolbarProfile.setNavigationOnClickListener(v -> {
             finish();
         });
 

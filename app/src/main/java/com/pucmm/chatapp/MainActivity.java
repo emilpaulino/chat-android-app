@@ -24,6 +24,7 @@ import com.pucmm.chatapp.databinding.ActivityMainBinding;
 import com.pucmm.chatapp.ui.auth.LoginActivity;
 import com.pucmm.chatapp.ui.chat.ChatActivity;
 import com.pucmm.chatapp.ui.chat.ChatAdapter;
+import com.pucmm.chatapp.ui.profile.ProfileActivity;
 import com.pucmm.chatapp.ui.users.UsersActivity;
 import com.pucmm.chatapp.viewmodel.AuthViewModel;
 import com.pucmm.chatapp.viewmodel.ChatViewModel;
@@ -94,6 +95,11 @@ public class MainActivity extends AppCompatActivity {
                 finish();
 
                 return true;
+            } else if (item.getItemId() == R.id.edit_profile) {
+                Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                startActivity(intent);
+
+                return true;
             }
 
             return false;
@@ -109,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
         binding.imgContacts.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, UsersActivity.class);
             startActivity(intent);
+            finish();
         });
     }
 

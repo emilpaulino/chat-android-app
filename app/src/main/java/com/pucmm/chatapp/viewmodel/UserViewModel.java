@@ -1,5 +1,7 @@
 package com.pucmm.chatapp.viewmodel;
 
+import android.net.Uri;
+
 import androidx.lifecycle.ViewModel;
 
 import com.pucmm.chatapp.data.repository.UserRepository;
@@ -25,5 +27,13 @@ public class UserViewModel extends ViewModel {
 
     public void removeFcmToken(String userId, UserRepository.TokenCallback callback) {
         userRepository.removeFcmToken(userId, callback);
+    }
+
+    public void updateUserName(String userId, String userName, UserRepository.TokenCallback callback) {
+        userRepository.updateUserName(userId, userName, callback);
+    }
+
+    public void updateProfileImage(String userId, Uri imageUri, UserRepository.TokenCallback callback) {
+        userRepository.updateProfileImage(userId, imageUri, callback);
     }
 }

@@ -4,8 +4,11 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.pucmm.chatapp.R;
 import com.pucmm.chatapp.data.model.Chat;
 import com.pucmm.chatapp.databinding.ItemChatBinding;
 
@@ -46,8 +49,26 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
     @Override
     public void onBindViewHolder(@NonNull ChatViewHolder holder, int position) {
         Chat chat = chatList.get(position);
+
         holder.binding.txtUserName.setText(chat.getUser().getUserName());
         holder.binding.txtMessageDesc.setText(chat.getLastMessage().getText());
+
+        if (chat.getUser().getProfileImage() != null && !chat.getUser().getProfileImage().isEmpty()) {
+
+            holder.binding.imgProfile.clearColorFilter();
+
+            Glide.with(holder.itemView.getContext())
+                    .load(chat.getUser().getProfileImage())
+                    .circleCrop()
+                    .into(holder.binding.imgProfile);
+
+        } else {
+            holder.binding.imgProfile.setImageResource(R.drawable.ic_acc_circle);
+            holder.binding.imgProfile.setColorFilter(
+                    ContextCompat.getColor(holder.itemView.getContext(), R.color.primary)
+            );
+        }
+
         holder.itemView.setOnClickListener(v -> {
             listener.onChatClick(chat);
         });

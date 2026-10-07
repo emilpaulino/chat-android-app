@@ -20,6 +20,7 @@ import com.pucmm.chatapp.data.repository.UserRepository;
 import com.pucmm.chatapp.databinding.ActivityUsersBinding;
 import com.pucmm.chatapp.ui.auth.LoginActivity;
 import com.pucmm.chatapp.ui.chat.ChatActivity;
+import com.pucmm.chatapp.ui.profile.ProfileActivity;
 import com.pucmm.chatapp.viewmodel.AuthViewModel;
 import com.pucmm.chatapp.viewmodel.UserViewModel;
 
@@ -64,6 +65,7 @@ public class UsersActivity extends AppCompatActivity {
         binding.imgChats.setOnClickListener(v -> {
             Intent intent = new Intent(UsersActivity.this, MainActivity.class);
             startActivity(intent);
+            finish();
         });
 
         // Logout
@@ -76,6 +78,11 @@ public class UsersActivity extends AppCompatActivity {
                     Intent intent = new Intent(UsersActivity.this, LoginActivity.class);
                     startActivity(intent);
                     finish();
+                    return true;
+                } else if (item.getItemId() == R.id.edit_profile) {
+                    Intent intent = new Intent(UsersActivity.this, ProfileActivity.class);
+                    startActivity(intent);
+
                     return true;
                 }
                 return false;

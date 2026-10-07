@@ -4,8 +4,11 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.pucmm.chatapp.R;
 import com.pucmm.chatapp.data.model.User;
 import com.pucmm.chatapp.databinding.ItemUserBinding;
 
@@ -44,13 +47,26 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     @Override
     public void onBindViewHolder(@NonNull UserViewHolder holder, int position) {
         User user = userList.get(position);
+
         holder.binding.txtUserName.setText(user.getUserName());
-        holder.binding.txtContactEmail.setText(user.getEmail());
+        holder.binding.txtUserEmail.setText(user.getEmail());
+
+        if (user.getProfileImage() != null && !user.getProfileImage().isEmpty()) {
+            Glide.with(holder.itemView.getContext())
+                    .load(user.getProfileImage())
+                    .circleCrop()
+                    .into(holder.binding.imgProfile);
+        } else {
+                holder.binding.imgProfile.setImageResource(R.drawable.ic_acc_circle);
+                holder.binding.imgProfile.setColorFilter(
+                        ContextCompat.getColor(holder.itemView.getContext(), R.color.primary)
+                );
+            }
+
         holder.itemView.setOnClickListener(v -> {
             listener.onUserClick(user);
         });
     }
-
     @Override
     public int getItemCount() {
         return userList.size();

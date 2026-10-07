@@ -20,4 +20,9 @@
     <string name="txtLastMessage">Ultimo mensaje...</string>
     <string name="lblUserEmail">email@email.com</string>
     <string name="lblCerrarSesion">Cerrar Sesión</string>
+    <string name="lblEditarPerfil">Editar perfil</string>
+    <string name="txtToolbarTitleProfile">Editar perfil</string>
+    <string name="lblProfileEdit">Editar perfil</string>
+    <string name="lblProfileEditDesc">Actualiza tu información personal</string>
+    <string name="txtBtnEdit"> Guardar cambios</string>
 </resources>
